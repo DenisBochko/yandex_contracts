@@ -6,14 +6,18 @@ package auth;
 option go_package = "reelcy.sso.v1;ssov1";
 
 service Auth {
-    rpc Register (RegisterRequest) returns (RegisterResponse);
-    rpc Login (LoginRequest) returns (LoginResponse);
-    rpc IsAdmin (IsAdminRequest) returns (IsAdminResponse);
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+    rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse);
+    rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+    // rpc Verify(VerifyRequest) returns (VerifyResponse);
 }
-
+// ==========Register==========
 message RegisterRequest {
-    string email = 1;
-    string password = 2;
+    string username = 1;
+    string email = 2;
+    string password = 3;
 }
 
 // возвращает id созданного пользователя
@@ -21,20 +25,49 @@ message RegisterResponse {
     int64 user_id = 1;
 }
 
-message LoginRequest{
+// ==========Login==========
+message LoginRequest {
     string email = 1;
     string password = 2;
-    int32 app_id = 3;
+    int64 ttl = 3; // Время жизни токена в секундах (задаётся приложением, вызывающим этот метод)
 }
 
-message LoginResponse{
-    string token = 1;
+message LoginResponse {
+    string access_token = 1;
+    string refresh_token = 2;
 }
 
-message IsAdminRequest {
+// ==========Refresh==========
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+    string access_token = 1;
+    string refresh_token = 2; // если refresh_token не был обновлён, то возвращается старый
+}
+
+// ==========GetUserById==========
+message GetUserByIdRequest {
     int64 user_id = 1;
 }
 
-message IsAdminResponse {
-    bool is_admin = 1;
+message GetUserByIdResponse {
+    User user = 1; 
+}
+
+// ==========GetUsers==========
+message GetUsersRequest {
+    repeated int64 user_ids = 1; // Массив ID пользователей
+}
+
+message GetUsersResponse {
+    repeated User users = 1; // Массив структур пользователей
+}
+
+// Структура пользователя
+message User {
+    int64 user_id = 1;
+    string name = 2;
+    string email = 3;
 }
