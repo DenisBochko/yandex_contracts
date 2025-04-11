@@ -22,14 +22,13 @@ message RegisterRequest {
 
 // возвращает id созданного пользователя
 message RegisterResponse {
-    int64 user_id = 1;
+    string user_id = 1;
 }
 
 // ==========Login==========
 message LoginRequest {
     string email = 1;
     string password = 2;
-    int64 ttl = 3; // Время жизни токена в секундах (задаётся приложением, вызывающим этот метод)
 }
 
 message LoginResponse {
@@ -49,7 +48,7 @@ message RefreshTokenResponse {
 
 // ==========GetUserById==========
 message GetUserByIdRequest {
-    int64 user_id = 1;
+    string user_id = 1;
 }
 
 message GetUserByIdResponse {
@@ -58,7 +57,7 @@ message GetUserByIdResponse {
 
 // ==========GetUsers==========
 message GetUsersRequest {
-    repeated int64 user_ids = 1; // Массив ID пользователей
+    repeated string user_ids = 1; // Массив ID пользователей
 }
 
 message GetUsersResponse {
@@ -67,7 +66,7 @@ message GetUsersResponse {
 
 // Структура пользователя
 message User {
-    int64 user_id = 1;
+    string user_id = 1;
     string name = 2;
     string email = 3;
 }
