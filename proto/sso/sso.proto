@@ -5,6 +5,8 @@ package auth;
 // Настройки для генерации Go кода.
 option go_package = "reelcy.sso.v1;ssov1";
 
+// Сервис аутентификации и авторизации пользователей.
+// Содержит методы для регистрации, входа в систему, обновления токенов и получения информации о пользователях.
 service Auth {
     rpc Register(RegisterRequest) returns (RegisterResponse);
     rpc Login(LoginRequest) returns (LoginResponse);

@@ -29,6 +29,9 @@ const (
 // AuthClient is the client API for Auth service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// Сервис аутентификации и авторизации пользователей.
+// Содержит методы для регистрации, входа в систему, обновления токенов и получения информации о пользователях.
 type AuthClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
@@ -98,6 +101,9 @@ func (c *authClient) GetUsers(ctx context.Context, in *GetUsersRequest, opts ...
 // AuthServer is the server API for Auth service.
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility.
+//
+// Сервис аутентификации и авторизации пользователей.
+// Содержит методы для регистрации, входа в систему, обновления токенов и получения информации о пользователях.
 type AuthServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
