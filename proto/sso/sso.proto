@@ -11,10 +11,17 @@ service Auth {
     rpc Register(RegisterRequest) returns (RegisterResponse);
     rpc Login(LoginRequest) returns (LoginResponse);
     rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+    rpc Verify(VerifyRequest) returns (VerifyResponse);
+}
+
+service Users {
     rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse);
     rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
-    // rpc Verify(VerifyRequest) returns (VerifyResponse);
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+    rpc UploadPhoto (UploadPhotoRequest) returns (UploadPhotoResponse);
 }
+
 // ==========Register==========
 message RegisterRequest {
     string username = 1;
@@ -71,4 +78,47 @@ message User {
     string user_id = 1;
     string name = 2;
     string email = 3;
+}
+
+// ==========Verify==========
+message VerifyRequest {
+    string verify_token = 1; // Токен доступа, содержит информацию о пользователе (id, email)
+}
+
+message VerifyResponse {
+    bool is_valid = 1; // true, если токен валиден => пользователь верифицирован
+}
+
+// ==========UpdateUser==========
+message UpdateUserRequest {
+    string user_id = 1;
+    string name = 2;
+    string email = 3;
+}
+
+message UpdateUserResponse {
+    string user_id = 1; // ID обновлённого пользователя
+}
+
+// ==========DeleteUser==========
+message DeleteUserRequest {
+    string user_id = 1;
+}
+
+message DeleteUserResponse {
+    string user_id = 1; // ID удалённого пользователя
+}
+
+// ==========UploadPhoto==========
+message UploadPhotoRequest {
+    string user_id = 1;
+    bytes photo = 2;
+    string file_name = 3;
+    string content_type = 4;
+}
+
+message UploadPhotoResponse {
+    string url = 1;
+    string status = 2;
+    string message = 3;
 }
