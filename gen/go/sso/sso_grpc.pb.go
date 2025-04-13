@@ -241,11 +241,11 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Users_GetUserById_FullMethodName = "/auth.Users/GetUserById"
-	Users_GetUsers_FullMethodName    = "/auth.Users/GetUsers"
-	Users_UpdateUser_FullMethodName  = "/auth.Users/UpdateUser"
-	Users_DeleteUser_FullMethodName  = "/auth.Users/DeleteUser"
-	Users_UploadPhoto_FullMethodName = "/auth.Users/UploadPhoto"
+	Users_GetUserById_FullMethodName  = "/auth.Users/GetUserById"
+	Users_GetUsers_FullMethodName     = "/auth.Users/GetUsers"
+	Users_UpdateUser_FullMethodName   = "/auth.Users/UpdateUser"
+	Users_DeleteUser_FullMethodName   = "/auth.Users/DeleteUser"
+	Users_UploadAvatar_FullMethodName = "/auth.Users/UploadAvatar"
 )
 
 // UsersClient is the client API for Users service.
@@ -256,7 +256,7 @@ type UsersClient interface {
 	GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
-	UploadPhoto(ctx context.Context, in *UploadPhotoRequest, opts ...grpc.CallOption) (*UploadPhotoResponse, error)
+	UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error)
 }
 
 type usersClient struct {
@@ -307,10 +307,10 @@ func (c *usersClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opt
 	return out, nil
 }
 
-func (c *usersClient) UploadPhoto(ctx context.Context, in *UploadPhotoRequest, opts ...grpc.CallOption) (*UploadPhotoResponse, error) {
+func (c *usersClient) UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UploadPhotoResponse)
-	err := c.cc.Invoke(ctx, Users_UploadPhoto_FullMethodName, in, out, cOpts...)
+	out := new(UploadAvatarResponse)
+	err := c.cc.Invoke(ctx, Users_UploadAvatar_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -325,7 +325,7 @@ type UsersServer interface {
 	GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
-	UploadPhoto(context.Context, *UploadPhotoRequest) (*UploadPhotoResponse, error)
+	UploadAvatar(context.Context, *UploadAvatarRequest) (*UploadAvatarResponse, error)
 	mustEmbedUnimplementedUsersServer()
 }
 
@@ -348,8 +348,8 @@ func (UnimplementedUsersServer) UpdateUser(context.Context, *UpdateUserRequest) 
 func (UnimplementedUsersServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedUsersServer) UploadPhoto(context.Context, *UploadPhotoRequest) (*UploadPhotoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadPhoto not implemented")
+func (UnimplementedUsersServer) UploadAvatar(context.Context, *UploadAvatarRequest) (*UploadAvatarResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadAvatar not implemented")
 }
 func (UnimplementedUsersServer) mustEmbedUnimplementedUsersServer() {}
 func (UnimplementedUsersServer) testEmbeddedByValue()               {}
@@ -444,20 +444,20 @@ func _Users_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Users_UploadPhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadPhotoRequest)
+func _Users_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadAvatarRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServer).UploadPhoto(ctx, in)
+		return srv.(UsersServer).UploadAvatar(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Users_UploadPhoto_FullMethodName,
+		FullMethod: Users_UploadAvatar_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServer).UploadPhoto(ctx, req.(*UploadPhotoRequest))
+		return srv.(UsersServer).UploadAvatar(ctx, req.(*UploadAvatarRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -486,8 +486,8 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Users_DeleteUser_Handler,
 		},
 		{
-			MethodName: "UploadPhoto",
-			Handler:    _Users_UploadPhoto_Handler,
+			MethodName: "UploadAvatar",
+			Handler:    _Users_UploadAvatar_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

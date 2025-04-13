@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package canvas;
+
+// Настройки для генерации Go кода.
+option go_package = "reelcy.sso.v1;ssov1";
+
+service Canvas {
+    rpc CreateCanvas(CreateCanvasRequest) returns (CreateCanvasResponse);
+    rpc GetCanvasById(GetCanvasByIdRequest) returns (GetCanvasByIdResponse);
+    rpc GetCanvases(GetCanvasesRequest) returns (GetCanvasesResponse);
+    rpc UploadImage(UploadImageRequest) returns (UploadImageResponse);
+    rpc JoinToCanvas(JoinToCanvasRequest) returns (JoinToCanvasResponse);
+    rpc AddToWhiteList(AddToWhiteListRequest) returns (AddToWhiteListResponse);
+    rpc UpdateCanvas(UpdateCanvasRequest) returns (UpdateCanvasResponse);
+    rpc DeleteCanvas(DeleteCanvasRequest) returns (DeleteCanvasResponse);
+}
+
+message CreateCanvasRequest {
+    string name = 1;
+    int32 width = 2;
+    int32 height = 3; 
+    string owner_id = 4; // id пользователя, который создал канвас
+    string privacy = 5; // приватность канваса (public, private, friends)
+}
+
+message CreateCanvasResponse {
+    string canvas_id = 1; // id созданного канваса
+}
+
+message GetCanvasByIdRequest {
+    string canvas_id = 1; // id канваса
+}
+
+message GetCanvasByIdResponse {
+    canvas canvas = 1; // канвас
+}
+
+message GetCanvasesRequest {
+    repeated string canvas_ids = 1; // id канвасов
+}
+
+message GetCanvasesResponse {
+    repeated canvas canvases = 1; // канвасы
+}
+
+message UploadImageRequest {
+    string canvas_id = 1; // id канваса
+    bytes image = 2; // изображение канваса в формате PNG
+}
+
+message UploadImageResponse {
+    string canvas_id = 1; // id загруженного изображения
+}
+
+// Одобрение по почте (отправляем овнеру на почту)
+message JoinToCanvasRequest {
+    string canvas_id = 1; // id канваса
+    string member_id = 2; // id пользователя который хочет присоединиться к канвасу
+}
+
+message JoinToCanvasResponse {
+    string canvas_id = 1; // id канваса
+}
+
+message AddToWhiteListRequest {
+    string canvas_id = 1; // id канваса
+    string member_id = 2; // id пользователя который хочет присоединиться к канвасу
+}
+
+message AddToWhiteListResponse {
+    string canvas_id = 1; // id канваса
+}
+
+message UpdateCanvasRequest {
+    string canvas_id = 1; // id канваса
+    string name = 2; // название канваса
+    string privacy = 3; // приватность канваса (public, private, friends)
+}
+
+message UpdateCanvasResponse {
+    string canvas_id = 1; // id обновлённого канваса
+}
+
+message DeleteCanvasRequest {
+    string canvas_id = 1; // id канваса
+}
+
+message DeleteCanvasResponse {
+    string canvas_id = 1; // id удалённого канваса
+}
+
+message canvas {
+    string canvas_id = 1; // id канваса
+    string name = 2; // название канваса
+    int32 width = 3; // ширина канваса
+    int32 height = 4; // высота канваса
+    string owner_id = 5; // id пользователя, который создал канвас
+    repeated string members_ids = 6; // id пользователей, которые могут редактировать канвас
+    string privacy = 7; // приватность канваса (public, private, friends)
+    bytes image = 8; // изображение канваса в формате PNG
+}

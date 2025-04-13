@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package auth;
 
+import "google/protobuf/timestamp.proto";
+
 // Настройки для генерации Go кода.
 option go_package = "reelcy.sso.v1;ssov1";
 
@@ -19,7 +21,7 @@ service Users {
     rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
     rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
     rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
-    rpc UploadPhoto (UploadPhotoRequest) returns (UploadPhotoResponse);
+    rpc UploadAvatar(UploadAvatarRequest) returns (UploadAvatarResponse);
 }
 
 // ==========Register==========
@@ -41,18 +43,22 @@ message LoginRequest {
 }
 
 message LoginResponse {
-    string access_token = 1;
-    string refresh_token = 2;
+    string access_token = 1; // токен доступа, используется для доступа к защищённым ресурсам
+    google.protobuf.Timestamp access_token_expires_at= 2; // время истечения токена
+    string refresh_token = 3;
+    google.protobuf.Timestamp refresh_token_expires_at = 4; // время истечения токена
 }
 
 // ==========Refresh==========
 message RefreshTokenRequest {
-    string access_token = 1;
+    string refresh_token = 1;
 }
 
 message RefreshTokenResponse {
     string access_token = 1;
-    string refresh_token = 2; // если refresh_token не был обновлён, то возвращается старый
+    google.protobuf.Timestamp access_token_expires_at= 2; // время истечения токена
+    string refresh_token = 3;
+    google.protobuf.Timestamp refresh_token_expires_at = 4; // время истечения токена
 }
 
 // ==========GetUserById==========
@@ -78,6 +84,7 @@ message User {
     string user_id = 1;
     string name = 2;
     string email = 3;
+    string avatar_url = 4; // URL аватара пользователя
 }
 
 // ==========Verify==========
@@ -110,15 +117,12 @@ message DeleteUserResponse {
 }
 
 // ==========UploadPhoto==========
-message UploadPhotoRequest {
+message UploadAvatarRequest {
     string user_id = 1;
     bytes photo = 2;
-    string file_name = 3;
-    string content_type = 4;
+    string content_type = 3; // тип контента (image/png, image/jpeg и т.д.)
 }
 
-message UploadPhotoResponse {
+message UploadAvatarResponse {
     string url = 1;
-    string status = 2;
-    string message = 3;
 }
