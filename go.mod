@@ -1,4 +1,4 @@
-module github.com/DenisBochko/yandex_contracts
+module gitlab.crja72.ru/golang/2025/spring/course/projects/go6/contracts
 
 go 1.23.1
 
