@@ -4,7 +4,7 @@
 // - protoc             v4.25.6
 // source: canvas/canvas.proto
 
-package ssov1
+package canvasv1
 
 import (
 	context "context"

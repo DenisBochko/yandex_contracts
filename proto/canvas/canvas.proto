@@ -3,7 +3,7 @@ syntax = "proto3";
 package canvas;
 
 // Настройки для генерации Go кода.
-option go_package = "reelcy.sso.v1;ssov1";
+option go_package = "reelcy.canvas.v1;canvasv1";
 
 service Canvas {
     rpc CreateCanvas(CreateCanvasRequest) returns (CreateCanvasResponse);
