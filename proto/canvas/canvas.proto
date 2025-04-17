@@ -14,6 +14,7 @@ service Canvas {
     rpc AddToWhiteList(AddToWhiteListRequest) returns (AddToWhiteListResponse);
     rpc UpdateCanvas(UpdateCanvasRequest) returns (UpdateCanvasResponse);
     rpc DeleteCanvas(DeleteCanvasRequest) returns (DeleteCanvasResponse);
+    rpc GetWhiteList(GetWhiteListRequest) returns (GetWhiteListResponse);
 }
 
 message CreateCanvasRequest {
@@ -88,6 +89,14 @@ message DeleteCanvasRequest {
 
 message DeleteCanvasResponse {
     string canvas_id = 1; // id удалённого канваса
+}
+
+message GetWhiteListRequest {
+    string canvas_id = 1; // id канваса
+}
+
+message GetWhiteListResponse {
+    repeated string members_ids = 1; // id пользователей, которые могут редактировать канвас
 }
 
 message canvas {

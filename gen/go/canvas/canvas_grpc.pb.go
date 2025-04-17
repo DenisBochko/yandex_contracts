@@ -27,6 +27,7 @@ const (
 	Canvas_AddToWhiteList_FullMethodName = "/canvas.Canvas/AddToWhiteList"
 	Canvas_UpdateCanvas_FullMethodName   = "/canvas.Canvas/UpdateCanvas"
 	Canvas_DeleteCanvas_FullMethodName   = "/canvas.Canvas/DeleteCanvas"
+	Canvas_GetWhiteList_FullMethodName   = "/canvas.Canvas/GetWhiteList"
 )
 
 // CanvasClient is the client API for Canvas service.
@@ -41,6 +42,7 @@ type CanvasClient interface {
 	AddToWhiteList(ctx context.Context, in *AddToWhiteListRequest, opts ...grpc.CallOption) (*AddToWhiteListResponse, error)
 	UpdateCanvas(ctx context.Context, in *UpdateCanvasRequest, opts ...grpc.CallOption) (*UpdateCanvasResponse, error)
 	DeleteCanvas(ctx context.Context, in *DeleteCanvasRequest, opts ...grpc.CallOption) (*DeleteCanvasResponse, error)
+	GetWhiteList(ctx context.Context, in *GetWhiteListRequest, opts ...grpc.CallOption) (*GetWhiteListResponse, error)
 }
 
 type canvasClient struct {
@@ -131,6 +133,16 @@ func (c *canvasClient) DeleteCanvas(ctx context.Context, in *DeleteCanvasRequest
 	return out, nil
 }
 
+func (c *canvasClient) GetWhiteList(ctx context.Context, in *GetWhiteListRequest, opts ...grpc.CallOption) (*GetWhiteListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetWhiteListResponse)
+	err := c.cc.Invoke(ctx, Canvas_GetWhiteList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CanvasServer is the server API for Canvas service.
 // All implementations must embed UnimplementedCanvasServer
 // for forward compatibility.
@@ -143,6 +155,7 @@ type CanvasServer interface {
 	AddToWhiteList(context.Context, *AddToWhiteListRequest) (*AddToWhiteListResponse, error)
 	UpdateCanvas(context.Context, *UpdateCanvasRequest) (*UpdateCanvasResponse, error)
 	DeleteCanvas(context.Context, *DeleteCanvasRequest) (*DeleteCanvasResponse, error)
+	GetWhiteList(context.Context, *GetWhiteListRequest) (*GetWhiteListResponse, error)
 	mustEmbedUnimplementedCanvasServer()
 }
 
@@ -176,6 +189,9 @@ func (UnimplementedCanvasServer) UpdateCanvas(context.Context, *UpdateCanvasRequ
 }
 func (UnimplementedCanvasServer) DeleteCanvas(context.Context, *DeleteCanvasRequest) (*DeleteCanvasResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCanvas not implemented")
+}
+func (UnimplementedCanvasServer) GetWhiteList(context.Context, *GetWhiteListRequest) (*GetWhiteListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWhiteList not implemented")
 }
 func (UnimplementedCanvasServer) mustEmbedUnimplementedCanvasServer() {}
 func (UnimplementedCanvasServer) testEmbeddedByValue()                {}
@@ -342,6 +358,24 @@ func _Canvas_DeleteCanvas_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Canvas_GetWhiteList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWhiteListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CanvasServer).GetWhiteList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Canvas_GetWhiteList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CanvasServer).GetWhiteList(ctx, req.(*GetWhiteListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Canvas_ServiceDesc is the grpc.ServiceDesc for Canvas service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -380,6 +414,10 @@ var Canvas_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteCanvas",
 			Handler:    _Canvas_DeleteCanvas_Handler,
+		},
+		{
+			MethodName: "GetWhiteList",
+			Handler:    _Canvas_GetWhiteList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
