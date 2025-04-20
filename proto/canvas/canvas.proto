@@ -10,7 +10,7 @@ service Canvas {
     rpc GetCanvasById(GetCanvasByIdRequest) returns (GetCanvasByIdResponse);
     rpc GetImageById(GetImageByIdRequest) returns (GetImageByIdResponse);
     rpc GetImageByIds(GetImageByIdsRequest) returns (GetImageByIdsResponse);
-    rpc GetCanvasByUserId(GetCanvasByOwnerIdRequest) returns (GetCanvasByOwnerIdResponse); // Смотрим и где пользователь owner, и где пользователь состоит в канвасе
+    rpc GetCanvasesByUserId(GetCanvasesByUserIdRequest) returns (GetCanvasesByUserIdResponse); // Смотрим и где пользователь owner, и где пользователь состоит в канвасе
     rpc GetCanvases(GetCanvasesRequest) returns (GetCanvasesResponse);
     rpc UploadImage(UploadImageRequest) returns (UploadImageResponse);
     rpc JoinToCanvas(JoinToCanvasRequest) returns (JoinToCanvasResponse);
@@ -63,11 +63,11 @@ message GetImageByIdsResponse {
     repeated bytes images = 1;
 }
 
-message GetCanvasByOwnerIdRequest {
-    repeated string user_id = 1;
+message GetCanvasesByUserIdRequest {
+    string user_id = 1;
 }
 
-message GetCanvasByOwnerIdResponse {
+message GetCanvasesByUserIdResponse {
     repeated canvas canvases = 1;
 }
 
