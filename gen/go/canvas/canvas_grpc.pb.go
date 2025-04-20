@@ -19,15 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Canvas_CreateCanvas_FullMethodName   = "/canvas.Canvas/CreateCanvas"
-	Canvas_GetCanvasById_FullMethodName  = "/canvas.Canvas/GetCanvasById"
-	Canvas_GetCanvases_FullMethodName    = "/canvas.Canvas/GetCanvases"
-	Canvas_UploadImage_FullMethodName    = "/canvas.Canvas/UploadImage"
-	Canvas_JoinToCanvas_FullMethodName   = "/canvas.Canvas/JoinToCanvas"
-	Canvas_AddToWhiteList_FullMethodName = "/canvas.Canvas/AddToWhiteList"
-	Canvas_UpdateCanvas_FullMethodName   = "/canvas.Canvas/UpdateCanvas"
-	Canvas_DeleteCanvas_FullMethodName   = "/canvas.Canvas/DeleteCanvas"
-	Canvas_GetWhiteList_FullMethodName   = "/canvas.Canvas/GetWhiteList"
+	Canvas_CreateCanvas_FullMethodName      = "/canvas.Canvas/CreateCanvas"
+	Canvas_GetCanvasById_FullMethodName     = "/canvas.Canvas/GetCanvasById"
+	Canvas_GetImageById_FullMethodName      = "/canvas.Canvas/GetImageById"
+	Canvas_GetImageByIds_FullMethodName     = "/canvas.Canvas/GetImageByIds"
+	Canvas_GetCanvasByUserId_FullMethodName = "/canvas.Canvas/GetCanvasByUserId"
+	Canvas_GetCanvases_FullMethodName       = "/canvas.Canvas/GetCanvases"
+	Canvas_UploadImage_FullMethodName       = "/canvas.Canvas/UploadImage"
+	Canvas_JoinToCanvas_FullMethodName      = "/canvas.Canvas/JoinToCanvas"
+	Canvas_AddToWhiteList_FullMethodName    = "/canvas.Canvas/AddToWhiteList"
+	Canvas_UpdateCanvas_FullMethodName      = "/canvas.Canvas/UpdateCanvas"
+	Canvas_DeleteCanvas_FullMethodName      = "/canvas.Canvas/DeleteCanvas"
 )
 
 // CanvasClient is the client API for Canvas service.
@@ -36,13 +38,15 @@ const (
 type CanvasClient interface {
 	CreateCanvas(ctx context.Context, in *CreateCanvasRequest, opts ...grpc.CallOption) (*CreateCanvasResponse, error)
 	GetCanvasById(ctx context.Context, in *GetCanvasByIdRequest, opts ...grpc.CallOption) (*GetCanvasByIdResponse, error)
+	GetImageById(ctx context.Context, in *GetImageByIdRequest, opts ...grpc.CallOption) (*GetImageByIdResponse, error)
+	GetImageByIds(ctx context.Context, in *GetImageByIdsRequest, opts ...grpc.CallOption) (*GetImageByIdsResponse, error)
+	GetCanvasByUserId(ctx context.Context, in *GetCanvasByOwnerIdRequest, opts ...grpc.CallOption) (*GetCanvasByOwnerIdResponse, error)
 	GetCanvases(ctx context.Context, in *GetCanvasesRequest, opts ...grpc.CallOption) (*GetCanvasesResponse, error)
 	UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*UploadImageResponse, error)
 	JoinToCanvas(ctx context.Context, in *JoinToCanvasRequest, opts ...grpc.CallOption) (*JoinToCanvasResponse, error)
 	AddToWhiteList(ctx context.Context, in *AddToWhiteListRequest, opts ...grpc.CallOption) (*AddToWhiteListResponse, error)
 	UpdateCanvas(ctx context.Context, in *UpdateCanvasRequest, opts ...grpc.CallOption) (*UpdateCanvasResponse, error)
 	DeleteCanvas(ctx context.Context, in *DeleteCanvasRequest, opts ...grpc.CallOption) (*DeleteCanvasResponse, error)
-	GetWhiteList(ctx context.Context, in *GetWhiteListRequest, opts ...grpc.CallOption) (*GetWhiteListResponse, error)
 }
 
 type canvasClient struct {
@@ -67,6 +71,36 @@ func (c *canvasClient) GetCanvasById(ctx context.Context, in *GetCanvasByIdReque
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCanvasByIdResponse)
 	err := c.cc.Invoke(ctx, Canvas_GetCanvasById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *canvasClient) GetImageById(ctx context.Context, in *GetImageByIdRequest, opts ...grpc.CallOption) (*GetImageByIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetImageByIdResponse)
+	err := c.cc.Invoke(ctx, Canvas_GetImageById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *canvasClient) GetImageByIds(ctx context.Context, in *GetImageByIdsRequest, opts ...grpc.CallOption) (*GetImageByIdsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetImageByIdsResponse)
+	err := c.cc.Invoke(ctx, Canvas_GetImageByIds_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *canvasClient) GetCanvasByUserId(ctx context.Context, in *GetCanvasByOwnerIdRequest, opts ...grpc.CallOption) (*GetCanvasByOwnerIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCanvasByOwnerIdResponse)
+	err := c.cc.Invoke(ctx, Canvas_GetCanvasByUserId_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -133,29 +167,21 @@ func (c *canvasClient) DeleteCanvas(ctx context.Context, in *DeleteCanvasRequest
 	return out, nil
 }
 
-func (c *canvasClient) GetWhiteList(ctx context.Context, in *GetWhiteListRequest, opts ...grpc.CallOption) (*GetWhiteListResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetWhiteListResponse)
-	err := c.cc.Invoke(ctx, Canvas_GetWhiteList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // CanvasServer is the server API for Canvas service.
 // All implementations must embed UnimplementedCanvasServer
 // for forward compatibility.
 type CanvasServer interface {
 	CreateCanvas(context.Context, *CreateCanvasRequest) (*CreateCanvasResponse, error)
 	GetCanvasById(context.Context, *GetCanvasByIdRequest) (*GetCanvasByIdResponse, error)
+	GetImageById(context.Context, *GetImageByIdRequest) (*GetImageByIdResponse, error)
+	GetImageByIds(context.Context, *GetImageByIdsRequest) (*GetImageByIdsResponse, error)
+	GetCanvasByUserId(context.Context, *GetCanvasByOwnerIdRequest) (*GetCanvasByOwnerIdResponse, error)
 	GetCanvases(context.Context, *GetCanvasesRequest) (*GetCanvasesResponse, error)
 	UploadImage(context.Context, *UploadImageRequest) (*UploadImageResponse, error)
 	JoinToCanvas(context.Context, *JoinToCanvasRequest) (*JoinToCanvasResponse, error)
 	AddToWhiteList(context.Context, *AddToWhiteListRequest) (*AddToWhiteListResponse, error)
 	UpdateCanvas(context.Context, *UpdateCanvasRequest) (*UpdateCanvasResponse, error)
 	DeleteCanvas(context.Context, *DeleteCanvasRequest) (*DeleteCanvasResponse, error)
-	GetWhiteList(context.Context, *GetWhiteListRequest) (*GetWhiteListResponse, error)
 	mustEmbedUnimplementedCanvasServer()
 }
 
@@ -171,6 +197,15 @@ func (UnimplementedCanvasServer) CreateCanvas(context.Context, *CreateCanvasRequ
 }
 func (UnimplementedCanvasServer) GetCanvasById(context.Context, *GetCanvasByIdRequest) (*GetCanvasByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCanvasById not implemented")
+}
+func (UnimplementedCanvasServer) GetImageById(context.Context, *GetImageByIdRequest) (*GetImageByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetImageById not implemented")
+}
+func (UnimplementedCanvasServer) GetImageByIds(context.Context, *GetImageByIdsRequest) (*GetImageByIdsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetImageByIds not implemented")
+}
+func (UnimplementedCanvasServer) GetCanvasByUserId(context.Context, *GetCanvasByOwnerIdRequest) (*GetCanvasByOwnerIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCanvasByUserId not implemented")
 }
 func (UnimplementedCanvasServer) GetCanvases(context.Context, *GetCanvasesRequest) (*GetCanvasesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCanvases not implemented")
@@ -189,9 +224,6 @@ func (UnimplementedCanvasServer) UpdateCanvas(context.Context, *UpdateCanvasRequ
 }
 func (UnimplementedCanvasServer) DeleteCanvas(context.Context, *DeleteCanvasRequest) (*DeleteCanvasResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCanvas not implemented")
-}
-func (UnimplementedCanvasServer) GetWhiteList(context.Context, *GetWhiteListRequest) (*GetWhiteListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetWhiteList not implemented")
 }
 func (UnimplementedCanvasServer) mustEmbedUnimplementedCanvasServer() {}
 func (UnimplementedCanvasServer) testEmbeddedByValue()                {}
@@ -246,6 +278,60 @@ func _Canvas_GetCanvasById_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CanvasServer).GetCanvasById(ctx, req.(*GetCanvasByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Canvas_GetImageById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetImageByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CanvasServer).GetImageById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Canvas_GetImageById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CanvasServer).GetImageById(ctx, req.(*GetImageByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Canvas_GetImageByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetImageByIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CanvasServer).GetImageByIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Canvas_GetImageByIds_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CanvasServer).GetImageByIds(ctx, req.(*GetImageByIdsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Canvas_GetCanvasByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCanvasByOwnerIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CanvasServer).GetCanvasByUserId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Canvas_GetCanvasByUserId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CanvasServer).GetCanvasByUserId(ctx, req.(*GetCanvasByOwnerIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -358,24 +444,6 @@ func _Canvas_DeleteCanvas_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Canvas_GetWhiteList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetWhiteListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CanvasServer).GetWhiteList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Canvas_GetWhiteList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CanvasServer).GetWhiteList(ctx, req.(*GetWhiteListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Canvas_ServiceDesc is the grpc.ServiceDesc for Canvas service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -390,6 +458,18 @@ var Canvas_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCanvasById",
 			Handler:    _Canvas_GetCanvasById_Handler,
+		},
+		{
+			MethodName: "GetImageById",
+			Handler:    _Canvas_GetImageById_Handler,
+		},
+		{
+			MethodName: "GetImageByIds",
+			Handler:    _Canvas_GetImageByIds_Handler,
+		},
+		{
+			MethodName: "GetCanvasByUserId",
+			Handler:    _Canvas_GetCanvasByUserId_Handler,
 		},
 		{
 			MethodName: "GetCanvases",
@@ -414,10 +494,6 @@ var Canvas_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteCanvas",
 			Handler:    _Canvas_DeleteCanvas_Handler,
-		},
-		{
-			MethodName: "GetWhiteList",
-			Handler:    _Canvas_GetWhiteList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
