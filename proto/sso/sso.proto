@@ -14,6 +14,7 @@ service Auth {
     rpc Login(LoginRequest) returns (LoginResponse);
     rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
     rpc Verify(VerifyRequest) returns (VerifyResponse);
+    rpc Logout(LogoutRequest) returns (LogoutResponse);
 }
 
 service Users {
@@ -94,6 +95,14 @@ message VerifyRequest {
 
 message VerifyResponse {
     bool is_valid = 1; // true, если токен валиден => пользователь верифицирован
+}
+
+message LogoutRequest {
+    string refresh_token = 1;
+}
+
+message LogoutResponse {
+    string status = 1; // например, "OK" 
 }
 
 // ==========UpdateUser==========
