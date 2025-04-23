@@ -4,6 +4,7 @@ package canvas;
 
 // Настройки для генерации Go кода.
 option go_package = "reelcy.canvas.v1;canvasv1";
+import "google/protobuf/timestamp.proto";
 
 service Canvas {
     rpc CreateCanvas(CreateCanvasRequest) returns (CreateCanvasResponse);
@@ -125,4 +126,5 @@ message canvas {
     string owner_id = 5; // id пользователя, который создал канвас
     repeated string members_ids = 6; // id пользователей, которые могут редактировать канвас
     string privacy = 7; // приватность канваса (public, private, friends)
+    google.protobuf.Timestamp created_at = 8; // дата и время создания канваса
 }
