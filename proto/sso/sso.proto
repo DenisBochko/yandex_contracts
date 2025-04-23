@@ -11,6 +11,7 @@ option go_package = "reelcy.sso.v1;ssov1";
 // Содержит методы для регистрации, входа в систему, обновления токенов и получения информации о пользователях.
 service Auth {
     rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc ResendVerificationToken (ResendVerificationTokenRequest) returns (ResendVerificationTokenResponse);
     rpc Login(LoginRequest) returns (LoginResponse);
     rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
     rpc Verify(VerifyRequest) returns (VerifyResponse);
@@ -35,6 +36,15 @@ message RegisterRequest {
 // возвращает id созданного пользователя
 message RegisterResponse {
     string user_id = 1;
+}
+
+// ==========Resend verification token==========
+message ResendVerificationTokenRequest{
+    string user_id = 1;
+}
+
+message ResendVerificationTokenResponse {
+    string status = 1;
 }
 
 // ==========Login==========

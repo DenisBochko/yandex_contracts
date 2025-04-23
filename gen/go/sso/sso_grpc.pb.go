@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Auth_Register_FullMethodName     = "/auth.Auth/Register"
-	Auth_Login_FullMethodName        = "/auth.Auth/Login"
-	Auth_RefreshToken_FullMethodName = "/auth.Auth/RefreshToken"
-	Auth_Verify_FullMethodName       = "/auth.Auth/Verify"
-	Auth_Logout_FullMethodName       = "/auth.Auth/Logout"
+	Auth_Register_FullMethodName                = "/auth.Auth/Register"
+	Auth_ResendVerificationToken_FullMethodName = "/auth.Auth/ResendVerificationToken"
+	Auth_Login_FullMethodName                   = "/auth.Auth/Login"
+	Auth_RefreshToken_FullMethodName            = "/auth.Auth/RefreshToken"
+	Auth_Verify_FullMethodName                  = "/auth.Auth/Verify"
+	Auth_Logout_FullMethodName                  = "/auth.Auth/Logout"
 )
 
 // AuthClient is the client API for Auth service.
@@ -34,6 +35,7 @@ const (
 // Содержит методы для регистрации, входа в систему, обновления токенов и получения информации о пользователях.
 type AuthClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	ResendVerificationToken(ctx context.Context, in *ResendVerificationTokenRequest, opts ...grpc.CallOption) (*ResendVerificationTokenResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 	Verify(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*VerifyResponse, error)
@@ -52,6 +54,16 @@ func (c *authClient) Register(ctx context.Context, in *RegisterRequest, opts ...
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RegisterResponse)
 	err := c.cc.Invoke(ctx, Auth_Register_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) ResendVerificationToken(ctx context.Context, in *ResendVerificationTokenRequest, opts ...grpc.CallOption) (*ResendVerificationTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResendVerificationTokenResponse)
+	err := c.cc.Invoke(ctx, Auth_ResendVerificationToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -106,6 +118,7 @@ func (c *authClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc
 // Содержит методы для регистрации, входа в систему, обновления токенов и получения информации о пользователях.
 type AuthServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	ResendVerificationToken(context.Context, *ResendVerificationTokenRequest) (*ResendVerificationTokenResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
 	Verify(context.Context, *VerifyRequest) (*VerifyResponse, error)
@@ -122,6 +135,9 @@ type UnimplementedAuthServer struct{}
 
 func (UnimplementedAuthServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedAuthServer) ResendVerificationToken(context.Context, *ResendVerificationTokenRequest) (*ResendVerificationTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResendVerificationToken not implemented")
 }
 func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
@@ -170,6 +186,24 @@ func _Auth_Register_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_ResendVerificationToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResendVerificationTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ResendVerificationToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ResendVerificationToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ResendVerificationToken(ctx, req.(*ResendVerificationTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -256,6 +290,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Register",
 			Handler:    _Auth_Register_Handler,
+		},
+		{
+			MethodName: "ResendVerificationToken",
+			Handler:    _Auth_ResendVerificationToken_Handler,
 		},
 		{
 			MethodName: "Login",
