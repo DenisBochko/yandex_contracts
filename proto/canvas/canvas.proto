@@ -46,6 +46,7 @@ message GetImageByIdRequest {
 
 message GetImageByIdResponse {
     bytes image = 1;
+    string image_url = 2;
 }
 
 message GetCanvasesRequest {
